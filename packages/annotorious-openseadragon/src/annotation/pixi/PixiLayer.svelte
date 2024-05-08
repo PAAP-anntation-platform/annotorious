@@ -19,7 +19,9 @@
   
   const dispatch = createEventDispatcher<{ click: PixiLayerClickEvent}>();
 
-  let stage: ReturnType<typeof createStage>;
+  let stage: Awaited<ReturnType<typeof createStage>>
+  let resoleStage: () => void
+  let waitStage = new Promise<void>(resolve => {resoleStage = resolve});
 
   let lastPress: { x: number, y: number } | undefined;
 
@@ -100,43 +102,49 @@
     canvas.className = 'a9s-gl-canvas';
 
     viewer.element.querySelector('.openseadragon-canvas')?.appendChild(canvas);
-
-    // Create Pixi stage
-    stage = createStage(viewer, canvas);
-
-    // Event handlers
+    
     const moveHandler = onPointerMove(canvas);
-    canvas.addEventListener('pointermove', moveHandler); 
-
-    const observer = new ResizeObserver(entries => {
-      try {
-        const { width, height } = entries[0].contentRect;
-
-        canvas.width = width;
-        canvas.height = height;
-        
-        stage.resize(width, height);
-      } catch {
-        console.warn('WebGL canvas already disposed');
-      }
-    });
-
-    observer.observe(canvas);
 
     const updateViewportState = () => {
-      const viewportBounds = viewer.viewport.getBounds();
-      currentViewportBounds = viewer.viewport.viewportToImageRectangle(viewportBounds);
+        const viewportBounds = viewer.viewport.getBounds();
+        currentViewportBounds = viewer.viewport.viewportToImageRectangle(viewportBounds);
+  
+        const { x, y, width, height } = currentViewportBounds;
+  
+        const intersecting = store.getIntersecting(x, y, width, height);
+        viewport.set(intersecting.map(a => a.id));
+      }
 
-      const { x, y, width, height } = currentViewportBounds;
+    // Create Pixi stage
+    createStage(viewer, canvas).then((s)=> {
+      stage = s
 
-      const intersecting = store.getIntersecting(x, y, width, height);
-      viewport.set(intersecting.map(a => a.id));
-    }
+      // // Event handlers
+      canvas.addEventListener('pointermove', moveHandler); 
+  
+      const observer = new ResizeObserver(entries => {
+        try {
+          const { width, height } = entries[0].contentRect;
+  
+          // canvas.width = width;
+          // canvas.height = height;
+          
+          stage.resize(width, height);
+        } catch {
+          console.warn('WebGL canvas already disposed');
+        }
+      });
+  
+      observer.observe(canvas);
+  
+      viewer.addHandler('canvas-press', onCanvasPress);
+      viewer.addHandler('canvas-release', onCanvasRelease);
+      viewer.addHandler('update-viewport', stage.redraw);
+      viewer.addHandler('animation-finish', updateViewportState);
 
-    viewer.addHandler('canvas-press', onCanvasPress);
-    viewer.addHandler('canvas-release', onCanvasRelease);
-    viewer.addHandler('update-viewport', stage.redraw);
-    viewer.addHandler('animation-finish', updateViewportState);
+      resoleStage();
+    })
+
 
     return () => {
       canvas.removeEventListener('pointermove', moveHandler);
@@ -152,7 +160,9 @@
     }
   });
 
-  store.observe(event => {
+  store.observe(async event => {
+    await waitStage;
+
     const { created, updated, deleted } = event.changes;
 
     (created || []).forEach(annotation => stage.addAnnotation(annotation));
