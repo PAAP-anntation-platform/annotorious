@@ -1,0 +1,1 @@
+{"version":3,"file":"SVGSelector.d.ts","sourceRoot":"","sources":["../../../../src/model/w3c/svg/SVGSelector.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAsD,KAAK,EAAE,MAAM,YAAY,CAAC;AAI5F,MAAM,WAAW,WAAW;IAE1B,IAAI,EAAE,aAAa,CAAC;IAEpB,KAAK,EAAE,MAAM,CAAC;CAEf;AA0DD,eAAO,MAAM,gBAAgB,qCAAsC,WAAW,GAAG,MAAM,KAAG,CASzF,CAAA;AAED,eAAO,MAAM,oBAAoB,UAAW,KAAK,KAAG,WAiBnD,CAAA"}
