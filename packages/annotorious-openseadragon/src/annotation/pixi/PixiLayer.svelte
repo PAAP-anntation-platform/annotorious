@@ -4,7 +4,7 @@
   import type { DrawingStyleExpression } from '@annotorious/core';
   import type { Filter, ImageAnnotation, ImageAnnotatorState } from '@annotorious/annotorious';
   import type { PixiLayerClickEvent } from './PixiLayerClickEvent';
-  import { createStage } from './stageRenderer';
+  import { StageRenderer } from './stageRenderer';
 
   import './PixiLayer.css';
 
@@ -19,7 +19,7 @@
   
   const dispatch = createEventDispatcher<{ click: PixiLayerClickEvent}>();
 
-  let stage: Awaited<ReturnType<typeof createStage>>
+  let stage: Awaited<ReturnType<typeof StageRenderer.prototype.createStage>>
   let resoleStage: () => void
   let waitStage = new Promise<void>(resolve => {resoleStage = resolve});
 
@@ -116,7 +116,7 @@
       }
 
     // Create Pixi stage
-    createStage(viewer, canvas).then((s)=> {
+    new StageRenderer().createStage(viewer, canvas).then((s)=> {
       stage = s
 
       // // Event handlers
