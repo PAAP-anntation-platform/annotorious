@@ -1,5 +1,5 @@
-import { M as e } from "./index-B7tf-B_-.js";
-import { U as o } from "./colorToUniform-B7LFXjB6.js";
+import { M as e } from "./index-BQKKS6vZ.js";
+import { U as o } from "./colorToUniform-M6-H1q5O.js";
 const t = new Int32Array(e);
 for (let r = 0; r < e; r++)
   t[r] = r;
@@ -9,4 +9,4 @@ const i = new o({
 export {
   i as b
 };
-//# sourceMappingURL=batchSamplersUniformGroup-DVE1LRMO.js.map
+//# sourceMappingURL=batchSamplersUniformGroup-C5Zcg1o4.js.map

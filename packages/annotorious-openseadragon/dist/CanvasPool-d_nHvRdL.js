@@ -1,4 +1,4 @@
-import { D as c, n } from "./index-B7tf-B_-.js";
+import { D as c, n } from "./index-BQKKS6vZ.js";
 class l {
   constructor(a) {
     this._canvasPool = /* @__PURE__ */ Object.create(null), this.canvasOptions = a || {}, this.enableFullScreen = !1;
@@ -44,4 +44,4 @@ const C = new l();
 export {
   C
 };
-//# sourceMappingURL=CanvasPool-DnQQO9Ca.js.map
+//# sourceMappingURL=CanvasPool-d_nHvRdL.js.map
